@@ -20,10 +20,7 @@ class Food {
 
 enum FoodCategory {
   hamburber, // yummy
-  salads,
-  sides,
-  desserts,
-  drinks
+  desserts
 }
 
 // food addons

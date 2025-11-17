@@ -1,6 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:foody/models/food.dart';
 
-class Restaurant {
+class Restaurant extends ChangeNotifier {
 
   //list of food menu
   final List<Food> _menu = [
@@ -8,7 +9,7 @@ class Restaurant {
     Food(
       name: 'Big Tasty',
       description: 'Super tasty hamburber!',
-      imagePath: 'lib/images/big_tasty.png',
+      imagePath: 'lib/images/burgers/big_tasty.png',
       price: 10.99,
       category: FoodCategory.hamburber,
       availableAddons: [
@@ -31,9 +32,9 @@ class Restaurant {
     Food(
         name: 'Oreo Ice Cream',
         description: 'Super tasty oreo ice cream!',
-        imagePath: 'lib/images/oreo_ice_cream.png',
+        imagePath: 'lib/images/desserts/oreo_ice_cream.png',
         price: 10.99,
-        category: FoodCategory.hamburber,
+        category: FoodCategory.desserts,
         availableAddons: [
           Addon(
               name: 'Super Sprinkles!',
