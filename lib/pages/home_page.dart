@@ -9,6 +9,7 @@ import 'package:foody/models/restaurant.dart';
 import 'package:provider/provider.dart';
 
 import '../components/food_tile.dart';
+import 'food_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -39,7 +40,11 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           final food = categoryMenu[index];
           return FoodTile(
             food: food,
-            onTap: () {},
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(
+                builder: (context) => FoodPage(food: food)
+              ));
+            },
           );
       });
     }).toList();
