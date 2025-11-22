@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:foody/pages/cart_page.dart';
 
 class HomeSliverAppBar extends StatelessWidget {
   final Widget child;
   final Widget title;
 
-  const HomeSliverAppBar({
-    super.key,
-    required this.child,
-    required this.title
-  });
+  const HomeSliverAppBar({super.key, required this.child, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +17,14 @@ class HomeSliverAppBar extends StatelessWidget {
       actions: [
         IconButton(
           onPressed: () {
-
+            // go to cart page
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const CartPage()),
+            );
           },
           icon: const Icon(Icons.shopping_cart),
-        )
+        ),
       ],
       backgroundColor: Theme.of(context).colorScheme.surface,
       foregroundColor: Theme.of(context).colorScheme.inversePrimary,
