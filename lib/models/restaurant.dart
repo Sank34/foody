@@ -2,9 +2,9 @@ import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:foody/models/cart_item.dart';
 import 'package:foody/models/food.dart';
+import 'package:intl/intl.dart';
 
 class Restaurant extends ChangeNotifier {
-
   //list of food menu
   final List<Food> _menu = [
     //burgers
@@ -15,43 +15,25 @@ class Restaurant extends ChangeNotifier {
       price: 10.99,
       category: FoodCategory.hamburber,
       availableAddons: [
-        Addon(
-          name: 'Super Cheese!',
-          price: 0.99
-        ),
-        Addon(
-            name: 'Super Onions!',
-            price: 0.99
-        ),
-        Addon(
-            name: 'Super Salad!',
-            price: 0.99
-        ),
-      ]
+        Addon(name: 'Super Cheese!', price: 0.99),
+        Addon(name: 'Super Onions!', price: 0.99),
+        Addon(name: 'Super Salad!', price: 0.99),
+      ],
     ),
 
     //desserts
     Food(
-        name: 'Oreo Ice Cream',
-        description: 'Super tasty oreo ice cream!',
-        imagePath: 'lib/images/desserts/oreo_ice_cream.png',
-        price: 10.99,
-        category: FoodCategory.desserts,
-        availableAddons: [
-          Addon(
-              name: 'Super Sprinkles!',
-              price: 0.99
-          ),
-          Addon(
-              name: 'Super Oreos!',
-              price: 0.99
-          ),
-          Addon(
-              name: 'Super Chocolate!',
-              price: 0.99
-          ),
-        ]
-    )
+      name: 'Oreo Ice Cream',
+      description: 'Super tasty oreo ice cream!',
+      imagePath: 'lib/images/desserts/oreo_ice_cream.png',
+      price: 10.99,
+      category: FoodCategory.desserts,
+      availableAddons: [
+        Addon(name: 'Super Sprinkles!', price: 0.99),
+        Addon(name: 'Super Oreos!', price: 0.99),
+        Addon(name: 'Super Chocolate!', price: 0.99),
+      ],
+    ),
   ];
   /*
     GETTERS METHODS
@@ -75,22 +57,20 @@ class Restaurant extends ChangeNotifier {
       return isFood && isAddon;
     });
 
-    if(cartItem != null) {
+    if (cartItem != null) {
       cartItem.quantity++;
     } else {
-      _cart.add(CartItem(
-        food: food,
-        selectedAddons: selectedAddons
-      ));
+      _cart.add(CartItem(food: food, selectedAddons: selectedAddons));
     }
     notifyListeners();
   }
+
   // remove from cart
   void removeFromCart(CartItem cartItem) {
     int cartIndex = _cart.indexOf(cartItem);
 
-    if(cartIndex != -1) {
-      if(_cart[cartIndex].quantity > 1) {
+    if (cartIndex != -1) {
+      if (_cart[cartIndex].quantity > 1) {
         _cart[cartIndex].quantity--;
       } else {
         _cart.remove(cartIndex);
@@ -98,14 +78,15 @@ class Restaurant extends ChangeNotifier {
     }
     notifyListeners();
   }
+
   // get total price cart
   double getTotalPrice() {
     double total = 0.0;
 
-    for(CartItem cartItem in _cart) {
+    for (CartItem cartItem in _cart) {
       double itemTotal = cartItem.food.price;
 
-      for(Addon addon in cartItem.selectedAddons) {
+      for (Addon addon in cartItem.selectedAddons) {
         itemTotal += addon.price;
       }
 
@@ -118,12 +99,13 @@ class Restaurant extends ChangeNotifier {
   // get total number of items cart
   int getTotalItemCount() {
     int total = 0;
-    for(CartItem cartItem in _cart) {
+    for (CartItem cartItem in _cart) {
       total += cartItem.quantity;
     }
 
     return total;
   }
+
   // reset cart
   void clearCart() {
     _cart.clear();
@@ -135,8 +117,49 @@ class Restaurant extends ChangeNotifier {
    */
 
   // generate receipt
+  String displayCartReceipt() {
+    final receipt = StringBuffer();
+    receipt.write("Here's Your Receipt.");
+    receipt.writeln();
+
+    //format the date => 2 seconds only
+    String formattedDate = DateFormat(
+      'yyyy-MM-dd HH:mm:ss',
+    ).format(DateTime.now());
+
+    receipt.writeln(formattedDate);
+    receipt.writeln();
+    receipt.writeln('------');
+
+    for (final cartItem in _cart) {
+      receipt.writeln(
+        '${cartItem.quantity} x ${cartItem.food.name} - ${_formatPrice(cartItem.food.price)}',
+      );
+      if (cartItem.selectedAddons.isNotEmpty) {
+        receipt.writeln(
+          "   Add-ons: ${_formatAddons(cartItem.selectedAddons)}",
+        );
+      }
+      receipt.writeln();
+    }
+
+    receipt.writeln('------');
+    receipt.writeln();
+    receipt.writeln('Total Items: ${getTotalItemCount()}');
+    receipt.writeln('Total Price: ${_formatPrice(getTotalPrice())}');
+
+    return receipt.toString();
+  }
 
   // format double value into money
+  String _formatPrice(double price) {
+    return "\$${price.toStringAsFixed(2)}";
+  }
 
   // format list of addons into a string summary
+  String _formatAddons(List<Addon> addons) {
+    return addons
+        .map((addon) => "${addon.name} (${_formatPrice(addon.price)})")
+        .join(", ");
+  }
 }
