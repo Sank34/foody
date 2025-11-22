@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:foody/services/auth/auth_service.dart';
 
 import '../components/button.dart';
 import '../components/text_field.dart';
@@ -16,6 +17,33 @@ class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPswdController = TextEditingController();
 
+  void register() async {
+    //get auth service
+    final _authService = AuthService();
+
+    //passwords match
+    if (passwordController.text == confirmPswdController.text) {
+      //create user
+      try {
+        await _authService.signUpWithEmailPassword(
+          emailController.text,
+          passwordController.text,
+        );
+      } catch (e) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(title: Text(e.toString())),
+        );
+      }
+    } else {
+      //passwords don't match
+      showDialog(
+        context: context,
+        builder: (context) =>
+            AlertDialog(title: Text('Passwords don\'t match!')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,16 +59,18 @@ class _RegisterPageState extends State<RegisterPage> {
             color: Theme.of(context).colorScheme.inversePrimary,
           ),
 
-          const SizedBox(height: 25,),
+          const SizedBox(height: 25),
 
           //message, app slogan
-          Text("Let's create an account!", style: TextStyle(
+          Text(
+            "Let's create an account!",
+            style: TextStyle(
               fontSize: 16,
-              color: Theme.of(context).colorScheme.inversePrimary
-          ),
+              color: Theme.of(context).colorScheme.inversePrimary,
+            ),
           ),
 
-          const SizedBox(height: 25,),
+          const SizedBox(height: 25),
 
           //email textfield
           CustomTextField(
@@ -49,7 +79,7 @@ class _RegisterPageState extends State<RegisterPage> {
             obscureText: false,
           ),
 
-          const SizedBox(height: 10,),
+          const SizedBox(height: 10),
 
           //password textfield
           CustomTextField(
@@ -58,7 +88,7 @@ class _RegisterPageState extends State<RegisterPage> {
             obscureText: true,
           ),
 
-          const SizedBox(height: 10,),
+          const SizedBox(height: 10),
 
           //password textfield
           CustomTextField(
@@ -67,37 +97,36 @@ class _RegisterPageState extends State<RegisterPage> {
             obscureText: true,
           ),
 
-          const SizedBox(height: 10,),
+          const SizedBox(height: 10),
 
           //sign in button
-          CustomButton(
-            onTap: () {},
-            text: "Sign Up",
-          ),
+          CustomButton(onTap: register, text: "Sign Up"),
 
-          const SizedBox(height: 25.0,),
+          const SizedBox(height: 25.0),
 
           // sign in + text
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("Already have an account?",
+              Text(
+                "Already have an account?",
                 style: TextStyle(
-                    color: Theme.of(context).colorScheme.inversePrimary
+                  color: Theme.of(context).colorScheme.inversePrimary,
                 ),
               ),
-              const SizedBox(width: 4,),
+              const SizedBox(width: 4),
               GestureDetector(
                 onTap: widget.onTap,
-                child: Text("Login here!",
+                child: Text(
+                  "Login here!",
                   style: TextStyle(
-                      color: Theme.of(context).colorScheme.inversePrimary,
-                      fontWeight: FontWeight.bold
+                    color: Theme.of(context).colorScheme.inversePrimary,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              )
+              ),
             ],
-          )
+          ),
         ],
       ),
     );

@@ -18,8 +18,8 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
-
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   //sort food items by category
   List<Food> _filterMenuByCategory(FoodCategory category, List<Food> fullMenu) {
@@ -41,18 +41,24 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           return FoodTile(
             food: food,
             onTap: () {
-              Navigator.push(context, MaterialPageRoute(
-                builder: (context) => FoodPage(food: food)
-              ));
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => FoodPage(food: food)),
+              );
             },
           );
-      });
+        },
+      );
     }).toList();
   }
+
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: FoodCategory.values.length, vsync: this);
+    _tabController = TabController(
+      length: FoodCategory.values.length,
+      vsync: this,
+    );
   }
 
   @override
@@ -60,6 +66,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     _tabController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,23 +78,25 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Divider(indent: 25,
+                Divider(
+                  indent: 25,
                   endIndent: 25,
                   color: Theme.of(context).colorScheme.secondary,
                 ),
                 // my current location
-                const CurrentLocation(),
+                CurrentLocation(),
                 // description box
-                const DescriptionBox()
+                const DescriptionBox(),
               ],
-            )
-        )],
+            ),
+          ),
+        ],
         body: Consumer<Restaurant>(
           builder: (context, restaurant, child) => TabBarView(
-              controller: _tabController,
-              children: getFoodInCateg(restaurant.menu)
+            controller: _tabController,
+            children: getFoodInCateg(restaurant.menu),
           ),
-        )
+        ),
       ),
     );
   }
